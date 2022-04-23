@@ -22,6 +22,12 @@ class BirthdaysPageState extends State<BirthdaysPage> {
 
   DateTime now = DateTime.now();
 
+  int daysBetween(DateTime from, DateTime to) {
+    from = DateTime(from.year, from.month, from.day);     // reset times to midnight
+    to = DateTime(to.year, to.month, to.day);
+    return (to.difference(from).inHours / 24).round();
+  }
+
   Future<DateTime?> getContactNextBirthday(Contact contact) async {
     var day = 0;
     var month = 0;
@@ -51,18 +57,32 @@ class BirthdaysPageState extends State<BirthdaysPage> {
       children: [
         SizedBox(
           width: 250,
-          height: 50,
+          height: 100,
           child: Container(
             padding: const EdgeInsets.only(left: 30, top: 10, bottom: 10),
             alignment: Alignment.centerLeft,
             child: Text(c.displayName),
           ),
         ),
-        Container(
-          padding: const EdgeInsets.only(right: 30, top: 10, bottom: 10),
-          alignment: Alignment.centerLeft,
-          child: Text(DateFormat('dd/MM/yyyy').format(birthday))
-        ),
+        Column(
+          children: [
+            Container(
+                padding: const EdgeInsets.only(right: 30, top: 5, bottom: 5),
+                alignment: Alignment.centerLeft,
+                child: Text(DateFormat('dd/MM/yyyy').format(birthday))
+            ),
+            Container(
+                padding: const EdgeInsets.only(right: 30, top: 5, bottom: 5),
+                alignment: Alignment.centerLeft,
+                child: Text(
+                    daysBetween(now, birthday).toString() + " day(s) left!",
+                  style: const TextStyle(
+                    color: Colors.red
+                  ),
+                )
+            ),
+          ],
+        )
       ],
     );
 
